@@ -84,6 +84,7 @@ def index():
       output += '</tr>'
     output += '</table>'
   conn.close()
+  output += '<p><a href="https://github.com/fobewp/huwptlist/tree/main">Forráskód</a></p>'
   output += '</body>'
   return output
 
