@@ -24,7 +24,9 @@ app = flask.Flask(__name__)
 @app.route('/')
 def index():
   conn = toolforge.connect('huwiki','analytics') # conn is a pymysql.connection object.
-  query = "SELECT page.page_title, revision.rev_timestamp, MIN(created.rev_timestamp), COUNT(DISTINCT(actor.actor_name)) FROM page INNER JOIN revision ON page.page_latest = revision.rev_id INNER JOIN revision AS created ON page.page_id = created.rev_page INNER JOIN templatelinks AS t ON page.page_id = t.tl_from INNER JOIN revision AS comments ON page.page_id = comments.rev_page INNER JOIN actor ON comments.rev_actor = actor.actor_id WHERE page.page_namespace = 4  AND page.page_title LIKE 'Törlésre_javasolt_lapok/%' AND page.page_id NOT IN ( SELECT tl_from FROM templatelinks WHERE tl_title = 'Ta' OR tl_title = 'Lt' OR tl_title = 'Kiürített_lap' ) AND page.page_title IN ( SELECT templatelinks.tl_title FROM templatelinks WHERE tl_from = 362 ) AND page.page_is_redirect = 0 AND page_title <> 'Törlésre_javasolt_lapok/fej' GROUP BY page.page_title ORDER BY MIN(created.rev_timestamp) DESC;"
+  query = ""
+  with open('query.sql','r') as file:
+    query = file.read().replace('\n',' ')
   rows = 0
   output  = '<head></head>\n'
   style   = 'body { font-family: sans-serif; }'
